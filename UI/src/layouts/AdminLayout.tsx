@@ -3,7 +3,9 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { 
   People as PeopleIcon, 
   Logout as LogoutIcon,
-  AdminPanelSettings as AdminIcon
+  AdminPanelSettings as AdminIcon,
+  Home as HomeIcon,
+  Inventory as InventoryIcon
 } from '@mui/icons-material';
 import { authApi } from '../api/authApi';
 import { getCurrentUser } from '../auth/authHelper';
@@ -25,6 +27,30 @@ export const AdminLayout = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Admin Panel - User Management
           </Typography>
+          <Button
+            color="inherit"
+            onClick={() => navigate('/')}
+            startIcon={<HomeIcon />}
+            sx={{ mr: 2 }}
+          >
+            Home
+          </Button>
+          <Button
+            color="inherit"
+            onClick={() => navigate('/users')}
+            startIcon={<PeopleIcon />}
+            sx={{ mr: 2 }}
+          >
+            Users
+          </Button>
+          <Button
+            color="inherit"
+            onClick={() => navigate('/products')}
+            startIcon={<InventoryIcon />}
+            sx={{ mr: 2 }}
+          >
+            Products
+          </Button>
           <Typography variant="body2" sx={{ mr: 2 }}>
             Welcome, <strong>{currentUser?.username}</strong> (Admin)
           </Typography>

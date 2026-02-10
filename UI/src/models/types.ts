@@ -30,3 +30,25 @@ export interface UpdateUserRequest {
   password?: string;
   role: UserRole;
 }
+
+export interface ProductDTO {
+  id: number;
+  name: string;
+  imageUrl: string;
+  price: number;
+  description: string;
+}
+
+export interface CreateProductRequest {
+  name: string;
+  imageUrl: string;
+  price: number;
+  description: string;
+}
+
+export interface UpdateProductRequest {
+  name: string;
+  imageUrl: string;
+  price: number;
+  description: string;
+}

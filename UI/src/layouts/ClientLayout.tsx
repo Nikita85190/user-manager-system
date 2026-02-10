@@ -3,7 +3,9 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { 
   People as PeopleIcon, 
   Logout as LogoutIcon,
-  Person as PersonIcon
+  Person as PersonIcon,
+  Home as HomeIcon,
+  Inventory as InventoryIcon
 } from '@mui/icons-material';
 import { authApi } from '../api/authApi';
 import { getCurrentUser } from '../auth/authHelper';
@@ -25,6 +27,30 @@ export const ClientLayout = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             User Management - View Only
           </Typography>
+          <Button
+            color="inherit"
+            onClick={() => navigate('/')}
+            startIcon={<HomeIcon />}
+            sx={{ mr: 2 }}
+          >
+            Home
+          </Button>
+          <Button
+            color="inherit"
+            onClick={() => navigate('/users')}
+            startIcon={<PeopleIcon />}
+            sx={{ mr: 2 }}
+          >
+            Users
+          </Button>
+          <Button
+            color="inherit"
+            onClick={() => navigate('/products')}
+            startIcon={<InventoryIcon />}
+            sx={{ mr: 2 }}
+          >
+            Products
+          </Button>
           <Chip 
             icon={<PersonIcon />}
             label={currentUser?.username}
