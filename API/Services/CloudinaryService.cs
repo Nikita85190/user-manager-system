@@ -9,18 +9,23 @@ namespace API.Services
 
         public CloudinaryService(IConfiguration configuration)
         {
-            var account = new Account(
-                configuration["Cloudinary:CloudName"],
-                configuration["Cloudinary:ApiKey"],
-                configuration["Cloudinary:ApiSecret"]
-            );
+            var cloudName = configuration["Cloudinary:CloudName"] 
+                ?? throw new InvalidOperationException("Cloudinary CloudName is not configured.");
+            var apiKey = configuration["Cloudinary:ApiKey"] 
+                ?? throw new InvalidOperationException("Cloudinary ApiKey is not configured.");
+            var apiSecret = configuration["Cloudinary:ApiSecret"] 
+                ?? throw new InvalidOperationException("Cloudinary ApiSecret is not configured.");
+
+            var account = new Account(cloudName, apiKey, apiSecret);
             _cloudinary = new Cloudinary(account);
         }
 
-        public async Task<string> UploadImageAsync(IFormFile file)
+        public async Task<string> UploadImageAsync(IFormFile file, CancellationToken cancellationToken = default)
         {
-            if (file == null || file.Length == 0)
-                throw new ArgumentException("File is empty");
+            ArgumentNullException.ThrowIfNull(file);
+            
+            if (file.Length == 0)
+                throw new ArgumentException("File is empty", nameof(file));
 
             using var stream = file.OpenReadStream();
             
@@ -38,14 +43,14 @@ namespace API.Services
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
             if (uploadResult.Error != null)
-                throw new Exception($"Upload failed: {uploadResult.Error.Message}");
+                throw new InvalidOperationException($"Upload failed: {uploadResult.Error.Message}");
 
             return uploadResult.SecureUrl.ToString();
         }
 
-        public async Task<bool> DeleteImageAsync(string publicId)
+        public async Task<bool> DeleteImageAsync(string publicId, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(publicId))
+            if (string.IsNullOrWhiteSpace(publicId))
                 return false;
 
             var deletionParams = new DeletionParams(publicId);

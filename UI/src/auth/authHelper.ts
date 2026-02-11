@@ -16,11 +16,9 @@ export const getCurrentUser = (): { id: number; username: string; role: UserRole
 
   try {
     const decoded = jwtDecode<JwtPayload>(token);
-    console.log('Decoded JWT:', decoded); // Debug log
     
     // Role может быть в разных форматах
     const roleValue = decoded.role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-    console.log('Role value:', roleValue); // Debug log
     
     const isAdminRole = roleValue === 'Admin' || roleValue === 'admin' || roleValue === '1' || roleValue === 1;
     
@@ -30,7 +28,6 @@ export const getCurrentUser = (): { id: number; username: string; role: UserRole
       role: isAdminRole ? UserRole.Admin : UserRole.Client
     };
   } catch (error) {
-    console.error('Error decoding token:', error);
     return null;
   }
 };
@@ -50,7 +47,6 @@ export const isAuthenticated = (): boolean => {
 
 export const isAdmin = (): boolean => {
   const user = getCurrentUser();
-  console.log('Current user:', user); // Debug log
   return user?.role === UserRole.Admin;
 };
 

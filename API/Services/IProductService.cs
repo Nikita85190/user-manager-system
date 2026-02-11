@@ -1,14 +1,13 @@
-using System.Collections.Generic;
 using API.DTOs;
 
 namespace API.Services
 {
     public interface IProductService
     {
-        IEnumerable<ProductDTO> GetAllProducts();
-        ProductDTO GetProductById(int id);
-        ProductDTO CreateProduct(CreateProductRequest request);
-        ProductDTO UpdateProduct(int id, UpdateProductRequest request);
-        bool DeleteProduct(int id);
+        Task<IEnumerable<ProductDTO>> GetAllProductsAsync(CancellationToken cancellationToken = default);
+        Task<ProductDTO?> GetProductByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<ProductDTO> CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken = default);
+        Task<ProductDTO?> UpdateProductAsync(int id, UpdateProductRequest request, CancellationToken cancellationToken = default);
+        Task<bool> DeleteProductAsync(int id, CancellationToken cancellationToken = default);
     }
 }

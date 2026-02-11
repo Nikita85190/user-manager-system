@@ -17,7 +17,11 @@ namespace API.Controllers
 
         [HttpPost("image")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UploadImageAsync(IFormFile file, CancellationToken cancellationToken)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded");
@@ -34,12 +38,16 @@ namespace API.Controllers
 
             try
             {
-                var imageUrl = await _cloudinaryService.UploadImageAsync(file);
+                var imageUrl = await _cloudinaryService.UploadImageAsync(file, cancellationToken);
                 return Ok(new { imageUrl });
             }
-            catch (Exception ex)
+            catch (InvalidOperationException)
             {
-                return StatusCode(500, $"Upload failed: {ex.Message}");
+                return StatusCode(500, "Upload failed. Please try again.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred during upload.");
             }
         }
     }

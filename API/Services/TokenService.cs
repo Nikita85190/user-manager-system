@@ -24,10 +24,15 @@ public class TokenService : ITokenService
 
     public string GenerateAccessToken(int userId, string username, string role)
     {
-        var secretKey = _configuration["JwtSettings:SecretKey"]!;
-        var issuer = _configuration["JwtSettings:Issuer"]!;
-        var audience = _configuration["JwtSettings:Audience"]!;
-        var expirationMinutes = int.Parse(_configuration["JwtSettings:AccessTokenExpirationMinutes"]!);
+        var secretKey = _configuration["JwtSettings:SecretKey"] 
+            ?? throw new InvalidOperationException("JWT SecretKey is not configured.");
+        var issuer = _configuration["JwtSettings:Issuer"] 
+            ?? throw new InvalidOperationException("JWT Issuer is not configured.");
+        var audience = _configuration["JwtSettings:Audience"] 
+            ?? throw new InvalidOperationException("JWT Audience is not configured.");
+        
+        if (!int.TryParse(_configuration["JwtSettings:AccessTokenExpirationMinutes"], out var expirationMinutes))
+            throw new InvalidOperationException("JWT AccessTokenExpirationMinutes is not configured properly.");
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -61,9 +66,12 @@ public class TokenService : ITokenService
 
     public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
     {
-        var secretKey = _configuration["JwtSettings:SecretKey"]!;
-        var issuer = _configuration["JwtSettings:Issuer"]!;
-        var audience = _configuration["JwtSettings:Audience"]!;
+        var secretKey = _configuration["JwtSettings:SecretKey"] 
+            ?? throw new InvalidOperationException("JWT SecretKey is not configured.");
+        var issuer = _configuration["JwtSettings:Issuer"] 
+            ?? throw new InvalidOperationException("JWT Issuer is not configured.");
+        var audience = _configuration["JwtSettings:Audience"] 
+            ?? throw new InvalidOperationException("JWT Audience is not configured.");
 
         var tokenValidationParameters = new TokenValidationParameters
         {

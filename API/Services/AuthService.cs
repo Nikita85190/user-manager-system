@@ -53,7 +53,8 @@ public class AuthService : IAuthService
         var accessToken = _tokenService.GenerateAccessToken(user.Id, user.Username, user.Role.ToString());
         var refreshToken = _tokenService.GenerateRefreshToken();
 
-        var refreshTokenExpirationDays = int.Parse(_configuration["JwtSettings:RefreshTokenExpirationDays"]!);
+        if (!int.TryParse(_configuration["JwtSettings:RefreshTokenExpirationDays"], out var refreshTokenExpirationDays))
+            throw new InvalidOperationException("JWT RefreshTokenExpirationDays is not configured properly.");
         
         var newRefreshToken = new RefreshToken
         {
@@ -93,7 +94,9 @@ public class AuthService : IAuthService
             storedToken.User.Role.ToString());
         
         var newRefreshToken = _tokenService.GenerateRefreshToken();
-        var refreshTokenExpirationDays = int.Parse(_configuration["JwtSettings:RefreshTokenExpirationDays"]!);
+        
+        if (!int.TryParse(_configuration["JwtSettings:RefreshTokenExpirationDays"], out var refreshTokenExpirationDays))
+            throw new InvalidOperationException("JWT RefreshTokenExpirationDays is not configured properly.");
 
         var newToken = new RefreshToken
         {

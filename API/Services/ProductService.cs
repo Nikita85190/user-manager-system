@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using API.DTOs;
 using API.Models;
 using API.Repositories;
@@ -15,9 +13,9 @@ namespace API.Services
             _repository = repository;
         }
 
-        public IEnumerable<ProductDTO> GetAllProducts()
+        public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync(CancellationToken cancellationToken = default)
         {
-            var products = _repository.GetAll();
+            var products = await _repository.GetAllAsync(cancellationToken);
             return products.Select(p => new ProductDTO
             {
                 Id = p.Id,
@@ -28,9 +26,9 @@ namespace API.Services
             });
         }
 
-        public ProductDTO GetProductById(int id)
+        public async Task<ProductDTO?> GetProductByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            var product = _repository.GetById(id);
+            var product = await _repository.GetByIdAsync(id, cancellationToken);
             if (product == null)
                 return null;
 
@@ -44,7 +42,7 @@ namespace API.Services
             };
         }
 
-        public ProductDTO CreateProduct(CreateProductRequest request)
+        public async Task<ProductDTO> CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken = default)
         {
             var product = new Product
             {
@@ -54,7 +52,7 @@ namespace API.Services
                 Description = request.Description
             };
 
-            var created = _repository.Add(product);
+            var created = await _repository.AddAsync(product, cancellationToken);
 
             return new ProductDTO
             {
@@ -66,9 +64,9 @@ namespace API.Services
             };
         }
 
-        public ProductDTO UpdateProduct(int id, UpdateProductRequest request)
+        public async Task<ProductDTO?> UpdateProductAsync(int id, UpdateProductRequest request, CancellationToken cancellationToken = default)
         {
-            var product = _repository.GetById(id);
+            var product = await _repository.GetByIdAsync(id, cancellationToken);
             if (product == null)
                 return null;
 
@@ -77,7 +75,7 @@ namespace API.Services
             product.Price = request.Price;
             product.Description = request.Description;
 
-            var updated = _repository.Update(product);
+            var updated = await _repository.UpdateAsync(product, cancellationToken);
 
             return new ProductDTO
             {
@@ -89,9 +87,9 @@ namespace API.Services
             };
         }
 
-        public bool DeleteProduct(int id)
+        public async Task<bool> DeleteProductAsync(int id, CancellationToken cancellationToken = default)
         {
-            return _repository.Delete(id);
+            return await _repository.DeleteAsync(id, cancellationToken);
         }
     }
 }

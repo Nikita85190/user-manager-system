@@ -80,7 +80,7 @@ public class UserService : IUserService
         user.Username = request.Username;
         user.Role = request.Role;
 
-        if (!string.IsNullOrEmpty(request.Password))
+        if (!string.IsNullOrWhiteSpace(request.Password))
         {
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
         }

@@ -1,7 +1,6 @@
 using API.Data;
 using API.Models;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories
 {
@@ -14,38 +13,38 @@ namespace API.Repositories
             _context = context;
         }
 
-        public IEnumerable<Product> GetAll()
+        public async Task<List<Product>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return _context.Products.ToList();
+            return await _context.Products.ToListAsync(cancellationToken);
         }
 
-        public Product GetById(int id)
+        public async Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return _context.Products.Find(id);
+            return await _context.Products.FindAsync(new object[] { id }, cancellationToken);
         }
 
-        public Product Add(Product product)
+        public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default)
         {
             _context.Products.Add(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken);
             return product;
         }
 
-        public Product Update(Product product)
+        public async Task<Product> UpdateAsync(Product product, CancellationToken cancellationToken = default)
         {
             _context.Products.Update(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken);
             return product;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var product = _context.Products.Find(id);
+            var product = await _context.Products.FindAsync(new object[] { id }, cancellationToken);
             if (product == null)
                 return false;
 
             _context.Products.Remove(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
     }

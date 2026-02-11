@@ -55,7 +55,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["SecretKey"]!;
+var secretKey = builder.Configuration["JwtSettings:SecretKey"] 
+    ?? throw new InvalidOperationException("JWT SecretKey is not configured. Please set it in User Secrets or Environment Variables.");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -124,7 +125,7 @@ using (var scope = app.Services.CreateScope())
             };
             
             context.Users.Add(adminUser);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             
             Console.WriteLine("Default admin user created: username='admin', password='1'");
         }

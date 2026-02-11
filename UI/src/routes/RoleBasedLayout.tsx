@@ -1,10 +1,11 @@
+import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { isAuthenticated, isAdmin } from '../auth/authHelper';
 import { AdminLayout } from '../layouts/AdminLayout';
 import { ClientLayout } from '../layouts/ClientLayout';
 
 interface RoleBasedLayoutProps {
-  children: JSX.Element;
+  children: ReactNode;
 }
 
 export const RoleBasedLayout = ({ children }: RoleBasedLayoutProps) => {

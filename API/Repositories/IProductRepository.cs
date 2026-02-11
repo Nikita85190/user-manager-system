@@ -1,14 +1,13 @@
 using API.Models;
-using System.Collections.Generic;
 
 namespace API.Repositories
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> GetAll();
-        Product GetById(int id);
-        Product Add(Product product);
-        Product Update(Product product);
-        bool Delete(int id);
+        Task<List<Product>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default);
+        Task<Product> UpdateAsync(Product product, CancellationToken cancellationToken = default);
+        Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
     }
 }

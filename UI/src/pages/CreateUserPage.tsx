@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -23,7 +23,7 @@ export const CreateUserPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -36,13 +36,17 @@ export const CreateUserPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [username, password, role, navigate]);
+
+  const handleBack = useCallback(() => {
+    navigate('/users');
+  }, [navigate]);
 
   return (
     <Container maxWidth="sm">
       <Paper sx={{ p: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-          <IconButton onClick={() => navigate('/users')} sx={{ mr: 2 }}>
+          <IconButton onClick={handleBack} sx={{ mr: 2 }}>
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h5" component="h1">
@@ -102,7 +106,7 @@ export const CreateUserPage = () => {
             </Button>
             <Button
               variant="outlined"
-              onClick={() => navigate('/users')}
+              onClick={handleBack}
               fullWidth
             >
               Cancel

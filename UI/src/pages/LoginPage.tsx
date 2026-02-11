@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '../api/authApi';
 import {
@@ -19,7 +19,7 @@ export const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -32,7 +32,7 @@ export const LoginPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [username, password, navigate]);
 
   return (
     <Paper elevation={10} sx={{ p: 4, borderRadius: 2 }}>
